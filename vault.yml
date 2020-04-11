@@ -4,6 +4,11 @@ vault:
   image: vault:0.10.3
   deploy:
     replicas: 1
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.vault.rule=Host(`vault.project.lambla.eu`)"
+      - "traefik.http.routers.vault.entrypoints=web"
+      - "traefik.http.services.vault.loadbalancer.server.port=8200"
   ports:
     - 8200:8200
   environment:
