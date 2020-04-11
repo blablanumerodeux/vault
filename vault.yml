@@ -1,24 +1,25 @@
 version: '3.1'
 
-vault:
-  image: vault:0.10.3
-  deploy:
-    replicas: 1
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.vault.rule=Host(`vault.project.lambla.eu`)"
-      - "traefik.http.routers.vault.entrypoints=web"
-      - "traefik.http.services.vault.loadbalancer.server.port=8200"
-  ports:
-    - 8200:8200
-  environment:
-    - VAULT_ADDR=http://127.0.0.1:8200
-    - VAULT_LOCAL_CONFIG={"backend":{"consul":{"address":"http://server-bootstrap:8500","path":"vault/"}},"listener":{"tcp":{"address":"0.0.0.0:8200","tls_disable":1}},"ui":true, "disable_mlock":true}
-  command: server
-  depends_on:
-    - server-bootstrap
-  networks:
-    - traefik_traefik
+services:
+  vault:
+    image: vault:0.10.3
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.vault.rule=Host(`vault.project.lambla.eu`)"
+        - "traefik.http.routers.vault.entrypoints=web"
+        - "traefik.http.services.vault.loadbalancer.server.port=8200"
+    ports:
+      - 8200:8200
+    environment:
+      - VAULT_ADDR=http://127.0.0.1:8200
+      - VAULT_LOCAL_CONFIG={"backend":{"consul":{"address":"http://server-bootstrap:8500","path":"vault/"}},"listener":{"tcp":{"address":"0.0.0.0:8200","tls_disable":1}},"ui":true, "disable_mlock":true}
+    command: server
+    depends_on:
+      - server-bootstrap
+    networks:
+      - traefik_traefik
 
 
 networks:
